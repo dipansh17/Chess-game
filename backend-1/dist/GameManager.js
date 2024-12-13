@@ -14,7 +14,7 @@ class GameManager {
         this.addHandler(socket);
     }
     removeUser(socket) {
-        this.users = this.users.filter(user => user != socket);
+        this.users = this.users.filter(user => user !== socket);
     }
     addHandler(socket) {
         socket.on("message", (data) => {
@@ -33,7 +33,7 @@ class GameManager {
             if (message.type == messages_1.MOVE) {
                 const game = this.games.find(game => game.player1 == socket || game.player2 == socket);
                 if (game) {
-                    game.makeMove(socket, message.move);
+                    game.makeMove(socket, message.payload.move);
                 }
             }
         });

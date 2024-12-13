@@ -6,7 +6,7 @@ export class Game{
     public player2:WebSocket;
     private board: Chess;
     private startTime:Date;
-    private moveCount:number;
+    private moveCount:number=0;
 
     constructor(player1:WebSocket,player2:WebSocket){
         this.player1=player1;
@@ -43,15 +43,20 @@ export class Game{
             return ;
         }
         if(this.board.isGameOver()){
-            this.player1.send(JSON.stringify({
+            this.player1.emit(JSON.stringify({
                 type:GAME_OVER,
                 payload:{
                     winner:this.board.turn()==='w'? "black":"white"
                 }
             }))
+            this.player2.emit(JSON.stringify({
+                type: GAME_OVER,
+                payload: {
+                    winner: this.board.turn() === "w" ? "black" : "white"
+                }}))
             return;
         }
-        if(this.board.moves().length%2==0){
+        if(this.moveCount%2==0){
             this.player2.send(JSON.stringify({
                 type:MOVE,
                 payload:move
